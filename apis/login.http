@@ -1,0 +1,43 @@
+### login Signup
+POST  {{BASE}}api/user/login
+Content-Type: application/json
+
+{
+  "email": "gajendravmy22@gmail.com",
+  "password": "FDgajju22"
+}
+
+
+###
+# forget password
+POST  {{BASE}}api/user/forget-password
+Content-Type: application/json
+
+{
+  "email": "gajendravmy22@gmail.com"
+}
+
+
+
+###
+# reset password
+PATCH  {{BASE}}api/user/reset-password/6ZI04Eo1HDckR6WN5u5JGEJ9R0FGTk5n
+Content-Type: application/json
+
+{
+  "password": "FDgajju22",
+  "passwordConfirm": "FDgajju22"
+}
+
+
+### 
+# update password
+PATCH {{BASE}}api/user/update-password
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "currentPassword": "FDgajju22",
+  "password": "12345678",
+  "passwordConfirm": "12345678"
+}

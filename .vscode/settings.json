@@ -1,0 +1,20 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "version": "v1",
+      "prodToken": "foo",
+      "nonProdToken": "bar"
+    },
+    "local": {
+      "version": "v2",
+      "BASE": "http://127.0.0.1:3000/",
+      "token": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjIwMWMyOTZjNzZiYmE0ZjQxMDIxZCIsImlhdCI6MTY2MzI2OTc3NCwiZXhwIjoxNjcxMDQ1Nzc0fQ.pl8L1YWaFOiiKIiXqefZplaxkiJ0G01QIewsGcKoD1g",
+      "secretKey": "devSecret"
+    },
+    "production": {
+      "host": "example.com",
+      "token": "{{$shared prodToken}}",
+      "secretKey": "prodSecret"
+    }
+  }
+}

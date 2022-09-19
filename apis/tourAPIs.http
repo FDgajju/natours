@@ -1,0 +1,72 @@
+### 
+GET {{BASE}}health
+
+
+
+###
+# get all tours 
+# filters
+# fields: select 1 or multiple fields 
+# sort: sort by specific property 
+# page: default 1
+# limit default 5
+# also can filter by pipline fild=value
+GET {{BASE}}api/tours
+  ?fields=name,averageRating
+  # &sort=-averageRating,price
+  # &page=1
+  # &limit=5
+Authorization: {{token}}
+
+
+
+### top 5 good and cheap tours
+GET {{BASE}}api/tours/top-5-cheap
+
+
+
+### get tour stats
+GET {{BASE}}api/tours/tour-stats
+
+
+
+
+### monthly plan accept a year 
+GET {{BASE}}api/tours/monthly-plan/2021
+
+
+###
+GET {{BASE}}api/tours/6320bd3378be9c0425400e9b
+
+
+###
+POST {{BASE}}api/tours
+Content-Type: application/json
+
+{
+    "name": "Test",
+    "duration": 1,
+    "maxGroupSize": 1,
+    "difficulty": "easy",
+    "price": 1,
+    "priceDiscount": 2,
+    "summary": "Test tour",
+    "imageCover": "tour-1-cover.jpg",
+    "averageRating": 4
+  }
+
+
+# 631b96feead1546043801bd2
+### update tours
+PATCH  {{BASE}}api/tours/631b96feead1546043801bd2
+Content-Type: application/json
+
+{
+  "averageRating": 4.8
+}
+
+
+
+#### detete tour
+DELETE {{BASE}}api/tours/6320bd3378be9c0425400e9b
+Authorization: {{token}}

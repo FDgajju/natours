@@ -1,0 +1,21 @@
+GET {{BASE}}health
+
+
+
+
+### user Signup
+POST  {{BASE}}api/user/signup
+Content-Type: application/json
+
+{
+  "name": "ratnesh sahu",
+  "email": "ratnesh@gmail.com",
+  "photo": "image.jpeg",
+  "role": "guide",
+  "password": "12345678",
+  "passwordConfirm": "12345678"
+}
+
+
+###
+GET {{BASE}}api/user
