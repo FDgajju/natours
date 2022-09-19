@@ -31,9 +31,7 @@ const importData = async (models, dataArray) => {
     });
 
     const createdData = await Promise.all(createAsync);
-    console.log(
-      `${createdData.length} collections just imported.`
-    );
+    console.log(`${createdData.length} collections just imported.`);
 
     process.exit();
   } catch (error) {
