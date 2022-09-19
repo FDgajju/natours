@@ -4,46 +4,61 @@ Note: DB connection , model and data Object require
 
 const fs = require('fs');
 const db_connection = require('../config/db');
+const Review = require('../models/reviewModel');
 const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
 
 const db_url = 'mongodb://127.0.0.1:27017/natours';
 
 db_connection(db_url);
 
-const data = JSON.parse(
+const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours.json`, 'utf-8')
 );
 
-const importData = async () => {
+const users = JSON.parse(
+  fs.readFileSync(`${__dirname}/../dev-data/data/users.json`, 'utf-8')
+);
+
+const reviews = JSON.parse(
+  fs.readFileSync(`${__dirname}/../dev-data/data/reviews.json`, 'utf-8')
+);
+
+const importData = async (models, dataArray) => {
   try {
-    await Tour.create(data);
-    console.log('Data successfully loaded.');
+    const createAsync = models.map(async (Model, i) => {
+      return await Model.create(dataArray[i], { validateBeforeSave: false });
+    });
+
+    const createdData = await Promise.all(createAsync);
+    console.log(
+      `${createdData.length} collections just imported.`
+    );
+
     process.exit();
   } catch (error) {
     console.log(error);
   }
 };
 
-const deleteAllData = async () => {
+const deleteAllData = async (...models) => {
   try {
-    await Tour.deleteMany({});
-    console.log('Data successfully deleted.');
+    const deleteAsync = models.map(async (Model, i) => {
+      return await Model.deleteMany({});
+    });
+
+    const deletedData = await Promise.all(deleteAsync);
+    console.log(deletedData);
+
     process.exit();
   } catch (error) {
     console.log(error);
   }
 };
 
-const checkData = async () => {
+const checkData = async (Model) => {
   try {
-    let check = await Tour.find();
-
-    check = check.map((el) => ({
-      name: el.name,
-      rating: el.averageRating,
-      price: el.price,
-      locations: el.locations
-    }));
+    let check = await Model.find();
 
     console.log({
       dataLength: check.length,
@@ -55,6 +70,7 @@ const checkData = async () => {
   }
 };
 
-if (process.argv[2] === 'import') importData();
-else if (process.argv[2] === 'delete') deleteAllData();
-else if (process.argv[2] === 'find') checkData();
+if (process.argv[2] === 'import')
+  importData([User, Tour, Review], [users, tours, reviews]);
+else if (process.argv[2] === 'delete') deleteAllData(User, Tour, Review);
+else if (process.argv[2] === 'find') checkData(User);
