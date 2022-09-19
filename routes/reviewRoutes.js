@@ -11,13 +11,15 @@ const checkParams = require('../middleware/checkParams');
 
 const router = Router({ mergeParams: true });
 
+router.use(protect); // all routes have this middleware
+
 router
   .route('/')
-  .post(protect, restriction('user'), checkParams, createReview)
+  .post(restriction('user'), checkParams, createReview)
   .get(getAllReviews);
 
 router.get('/:id', getReview);
-router.delete('/:id', deleteReview);
-router.patch('/:id', updateReview);
+router.delete('/:id', restriction('user', 'admin'), deleteReview);
+router.patch('/:id', restriction('user', 'admin'), updateReview);
 
 module.exports = router;

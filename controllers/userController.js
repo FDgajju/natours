@@ -10,6 +10,12 @@ const {
   getAll,
 } = require('./handlerFactory');
 
+const getCurrentUser = catchAsync(async (req, res, next) => {
+  const { user } = req;
+  req.params.id = user.id;
+  next();
+});
+
 const updateCurrentUser = catchAsync(async (req, res, next) => {
   const { body } = req;
 
@@ -52,6 +58,7 @@ const updateUser = updateOne(User);
 const deleteUser = deleteOne(User);
 
 module.exports = {
+  getCurrentUser,
   getAllUsers,
   getUser,
   updateCurrentUser,

@@ -21,13 +21,18 @@ router.use('/:tourId/review', reviewRoutes);
 
 router.get('/top-5-cheap', aliasTopTour, getAllTours);
 router.get('/tour-stats', getTourStats);
-router.get('/monthly-plan/:year', getMonthlyPlan);
+router.get(
+  '/monthly-plan/:year',
+  protect,
+  restriction('admin', 'lead-guid', 'guid'),
+  getMonthlyPlan
+);
 
-router.get('/', protect, getAllTours);
-router.post('/', createTour);
+router.get('/', getAllTours);
+router.post('/', protect, restriction('admin', 'lead-guid'), createTour);
 
 router.get('/:id', getTour);
-router.patch('/:id', updateTour);
+router.patch('/:id', protect, restriction('admin', 'lead-guid'), updateTour);
 router.delete('/:id', protect, restriction('admin', 'lead-guid'), deleteTour);
 
 module.exports = router;
