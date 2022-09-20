@@ -47,6 +47,7 @@ const tourSchema = new Schema(
       default: 4.5,
       min: [1, 'The rating must be above 1'],
       max: [5, 'The rating must be below 5'],
+      set: (val) => Math.floor(val * 10) / 10, // 4.66666666 * 10  => 47 / 10 => 4.7
     },
 
     price: {
@@ -132,6 +133,9 @@ const tourSchema = new Schema(
     toObject: { virtuals: true },
   }
 );
+
+tourSchema.index({ price: 1, averageRating: -1 });
+tourSchema.index({ slug: 1 });
 
 tourSchema.virtual('derationWeeks').get(function () {
   return this.duration / 7;

@@ -58,6 +58,8 @@ const checkData = async (Model) => {
   try {
     let check = await Model.find();
 
+    check = check.map((el) => el._id);
+
     console.log({
       dataLength: check.length,
       data: check.length ? check : 'Empty',
@@ -71,4 +73,4 @@ const checkData = async (Model) => {
 if (process.argv[2] === 'import')
   importData([User, Tour, Review], [users, tours, reviews]);
 else if (process.argv[2] === 'delete') deleteAllData(User, Tour, Review);
-else if (process.argv[2] === 'find') checkData(User);
+else if (process.argv[2] === 'find') checkData(Tour);

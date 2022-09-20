@@ -92,6 +92,7 @@ const getAll = (Model) =>
       .limitFields()
       .paginate();
 
+    // const doc = await features.query.explain();
     const doc = await features.query;
 
     return res.status(200).json({
