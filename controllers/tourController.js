@@ -1,5 +1,6 @@
 // const APIFeatures = require('../utils/apiFeatures');
 // const AppError = require('../utils/appError');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Tour = require('./../models/tourModel');
 const {
@@ -103,7 +104,83 @@ const getMonthlyPlan = catchAsync(async (req, res, next) => {
     .send({ status: 'success', result: plan.length, data: { plan } });
 });
 
+// get tours within
+const getToursWithin = catchAsync(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+  // 34.108633, -118.101430 //lat and lng
+  const [lat, lng] = latlng.split(',');
+
+  if (!lat || !lng)
+    return next(
+      new AppError(
+        'Please provide latitude and longitude if order of lat,lng.',
+        404
+      )
+    );
+
+  // mongoose accepts only radius to this is important
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1; //converting mile or km to radius
+
+  const tours = await Tour.find({
+    startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+  });
+
+  res.status(200).send({
+    status: 'success',
+    results: tours.length,
+    data: {
+      data: tours,
+    },
+  });
+});
+
+const getDistance = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
+
+  if (!lat || !lng)
+    return next(
+      new AppError(
+        'Please provide latitude and longitude if order of lat,lng.',
+        404
+      )
+    );
+
+  const distances = await Tour.aggregate([
+    {
+      // geoNear require of our fields contains a geoSpecial Index
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1], // converting string to numbers String * 1 = Number
+        },
+        distanceField: 'distance',
+        distanceMultiplier: multiplier,
+      },
+    },
+    {
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+
+  console.log(distances.map((el) => el.distance));
+  res.status(200).send({
+    status: 'success',
+    results: distances.length,
+    data: {
+      data: distances,
+    },
+  });
+});
+
 module.exports = {
+  getDistance,
+  getToursWithin,
   getAllTours,
   getTour,
   createTour,

@@ -136,6 +136,7 @@ const tourSchema = new Schema(
 
 tourSchema.index({ price: 1, averageRating: -1 });
 tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' });
 
 tourSchema.virtual('derationWeeks').get(function () {
   return this.duration / 7;
@@ -172,11 +173,11 @@ tourSchema.pre(/^find/, function (next) {
 });
 
 // AGGREGATION MIDDLEWARE:
-tourSchema.pre('aggregate', function (next) {
-  const addPL = { $match: { secretTour: { $ne: true } } };
-  this.pipeline().unshift(addPL);
-  next();
-});
+// tourSchema.pre('aggregate', function (next) {
+//   const addPL = { $match: { secretTour: { $ne: true } } };
+//   this.pipeline().unshift(addPL);
+//   next();
+// });
 
 const Tour = model('Tour', tourSchema);
 module.exports = Tour;

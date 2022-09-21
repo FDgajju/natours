@@ -10,6 +10,8 @@ const {
   aliasTopTour,
   getTourStats,
   getMonthlyPlan,
+  getToursWithin,
+  getDistance,
 } = require('../controllers/tourController');
 const { protect, restriction } = require('../middleware/auth');
 
@@ -27,6 +29,9 @@ router.get(
   restriction('admin', 'lead-guid', 'guid'),
   getMonthlyPlan
 );
+
+router.get('/tours-within/:distance/center/:latlng/unit/:unit', getToursWithin);
+router.get('/distances/:latlng/unit/:unit', getDistance);
 
 router.get('/', getAllTours);
 router.post('/', protect, restriction('admin', 'lead-guid'), createTour);
